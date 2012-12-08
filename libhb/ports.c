@@ -667,7 +667,9 @@ void hb_cond_signal( hb_cond_t * c )
 
 void hb_cond_broadcast( hb_cond_t * c )
 {
-#if USE_PTHREAD
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
+	// TODO: Handle this if needed
+#elif USE_PTHREAD
     pthread_cond_broadcast( &c->cond );
 #endif
 }
