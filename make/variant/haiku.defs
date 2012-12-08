@@ -3,6 +3,7 @@ TARGET.dylib.ext = .so
 GCC.start      = 1
 GCC.end        = 1
 GCC.args.dylib = -shared
+GCC.args.extra = -lnetwork -liconv
 GCC.args.pic   = 1
 
 GCC.args.g.none = -g0
