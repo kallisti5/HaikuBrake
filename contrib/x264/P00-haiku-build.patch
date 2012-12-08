@@ -1,0 +1,12 @@
+--- x264-orig/configure	2012-12-08 21:59:55.238288896 +0000
++++ x264/configure	2012-12-08 22:08:18.755499008 +0000
+@@ -465,6 +465,9 @@
+         SYS="FREEBSD"
+         LDFLAGS="$LDFLAGS -lm"
+         ;;
++    *haiku*)
++        SYS="HAIKU"
++        ;;
+     kfreebsd*-gnu)
+         SYS="FREEBSD"
+         define HAVE_MALLOC_H
