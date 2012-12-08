@@ -277,7 +277,7 @@ int main( int argc, char ** argv )
             }
         }
         hb_snooze( 200 );
-#elif !defined(SYS_BEOS)
+#elif !defined(SYS_BEOS) && !defined(SYS_HAIKU)
         fd_set         fds;
         struct timeval tv;
         int            ret;

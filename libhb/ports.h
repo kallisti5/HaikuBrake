@@ -48,7 +48,7 @@ void hb_mkdir( char * name );
  ***********************************************************************/
 typedef struct hb_thread_s hb_thread_t;
 
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
 #  define HB_LOW_PRIORITY    5
 #  define HB_NORMAL_PRIORITY 10
 #elif defined( SYS_DARWIN )

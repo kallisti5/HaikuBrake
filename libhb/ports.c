@@ -15,7 +15,7 @@
 #include <pthread.h>
 #endif
 
-#ifdef SYS_BEOS
+#if defined(SYS_BEOS) || defined(SYS_HAIKU)
 #include <kernel/OS.h>
 #endif
 
@@ -147,7 +147,7 @@ void hb_snooze( int delay )
     {
         return;
     }
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
     snooze( 1000 * delay );
 #elif defined( SYS_DARWIN ) || defined( SYS_LINUX ) || defined( SYS_FREEBSD) || defined( SYS_SunOS )
     usleep( 1000 * delay );
@@ -186,7 +186,7 @@ int hb_get_cpu_count()
     for( cpu_count = 0, bit = 0; bit < sizeof(p_aff); bit++ )
          cpu_count += (((uint8_t *)&p_aff)[bit / 8] >> (bit % 8)) & 1;
 
-#elif defined(SYS_BEOS)
+#elif defined(SYS_BEOS) || defined(SYS_HAIKU)
     system_info info;
     get_system_info( &info );
     cpu_count = info.cpu_count;
@@ -305,7 +305,7 @@ struct hb_thread_s
     hb_lock_t     * lock;
     int             exited;
 
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
     thread_id       thread;
 #elif USE_PTHREAD
     pthread_t       thread;
@@ -357,7 +357,7 @@ static void attribute_align_thread hb_thread_func( void * _t )
     pthread_setschedparam( pthread_self(), SCHED_OTHER, &param );
 #endif
 
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
     signal( SIGINT, SIG_IGN );
 #endif
 
@@ -392,7 +392,7 @@ hb_thread_t * hb_thread_init( const char * name, void (* function)(void *),
     t->lock     = hb_lock_init();
 
     /* Create and start the thread */
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
     t->thread = spawn_thread( (thread_func) hb_thread_func,
                               name, priority, t );
     resume_thread( t->thread );
@@ -424,7 +424,7 @@ void hb_thread_close( hb_thread_t ** _t )
     hb_thread_t * t = *_t;
 
     /* Join the thread */
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
     long exit_value;
     wait_for_thread( t->thread, &exit_value );
 
@@ -464,7 +464,7 @@ int hb_thread_has_exited( hb_thread_t * t )
  ***********************************************************************/
 struct hb_lock_s
 {
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
     sem_id          sem;
 #elif USE_PTHREAD
     pthread_mutex_t mutex;
@@ -485,7 +485,7 @@ hb_lock_t * hb_lock_init()
 {
     hb_lock_t * l = calloc( sizeof( hb_lock_t ), 1 );
 
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
     l->sem = create_sem( 1, "sem" );
 #elif USE_PTHREAD
     pthread_mutexattr_t mta;
@@ -508,7 +508,7 @@ void hb_lock_close( hb_lock_t ** _l )
 {
     hb_lock_t * l = *_l;
 
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
     delete_sem( l->sem );
 #elif USE_PTHREAD
     pthread_mutex_destroy( &l->mutex );
@@ -522,7 +522,7 @@ void hb_lock_close( hb_lock_t ** _l )
 
 void hb_lock( hb_lock_t * l )
 {
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
     acquire_sem( l->sem );
 #elif USE_PTHREAD
     pthread_mutex_lock( &l->mutex );
@@ -533,7 +533,7 @@ void hb_lock( hb_lock_t * l )
 
 void hb_unlock( hb_lock_t * l )
 {
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
     release_sem( l->sem );
 #elif USE_PTHREAD
     pthread_mutex_unlock( &l->mutex );
@@ -547,7 +547,7 @@ void hb_unlock( hb_lock_t * l )
  ***********************************************************************/
 struct hb_cond_s
 {
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
     int                 thread;
 #elif USE_PTHREAD
     pthread_cond_t      cond;
@@ -572,7 +572,7 @@ hb_cond_t * hb_cond_init()
     if( c == NULL )
         return NULL;
 
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
     c->thread = -1;
 #elif USE_PTHREAD
     pthread_cond_init( &c->cond, NULL );
@@ -587,7 +587,7 @@ void hb_cond_close( hb_cond_t ** _c )
 {
     hb_cond_t * c = *_c;
 
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
 #elif USE_PTHREAD
     pthread_cond_destroy( &c->cond );
 //#elif defined( SYS_CYGWIN )
@@ -600,7 +600,7 @@ void hb_cond_close( hb_cond_t ** _c )
 
 void hb_cond_wait( hb_cond_t * c, hb_lock_t * lock )
 {
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
     c->thread = find_thread( NULL );
     release_sem( lock->sem );
     suspend_thread( c->thread );
@@ -625,7 +625,7 @@ void hb_clock_gettime( struct timespec *tp )
 
 void hb_cond_timedwait( hb_cond_t * c, hb_lock_t * lock, int msec )
 {
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
     c->thread = find_thread( NULL );
     release_sem( lock->sem );
     suspend_thread( c->thread );
@@ -643,7 +643,7 @@ void hb_cond_timedwait( hb_cond_t * c, hb_lock_t * lock, int msec )
 
 void hb_cond_signal( hb_cond_t * c )
 {
-#if defined( SYS_BEOS )
+#if defined( SYS_BEOS ) || defined( SYS_HAIKU )
     while( c->thread != -1 )
     {
         thread_info info;
