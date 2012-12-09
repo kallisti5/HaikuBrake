@@ -308,7 +308,10 @@ void PicView::UpdateBitmap()
     fNextButton->SetEnabled( fIndex < 9 );
 
     /* Get new preview and copy it in our BBitmap */
+    #if 0
+    // TODO: Fix this
     hb_get_preview( fHandle, fTitle, fIndex, fRawPic );
+    #endif
     for( int i = 0; i < fTitle->height + 2; i++ )
     {
         memcpy( ( (uint8_t *) fBitmap->Bits() ) +

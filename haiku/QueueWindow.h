@@ -4,7 +4,7 @@
 #include <interface/Window.h>
 #include <interface/View.h>
 
-#include "hb.h"
+#include "hb_wrapper.h"
 
 class QueueView : public BView
 {

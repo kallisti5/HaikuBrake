@@ -2,8 +2,6 @@
 #include "MainWindow.h"
 #include "ScanWindow.h"
 
-#include "hb.h"
-
 int main()
 {
     HBApp * app = new HBApp();

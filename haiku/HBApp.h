@@ -3,7 +3,7 @@
 
 #include <Application.h>
 
-#include "hb.h"
+#include "hb_wrapper.h"
 
 class MainWindow;
 class ScanWindow;

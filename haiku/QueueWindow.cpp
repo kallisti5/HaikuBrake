@@ -78,8 +78,9 @@ void QueueView::UpdateQueue()
         j = hb_job( fHandle, i );
         t = j->title;
 
-        asprintf( &s, "DVD: %s", t->dvd );
-        AddStringView( s, &r );
+		// TODO: find dvd
+        //asprintf( &s, "DVD: %s", t->dvd );
+        //AddStringView( s, &r );
 
         asprintf( &s, "Title: %d", t->index );
         AddStringView( s, &r );

@@ -38,12 +38,12 @@ static int FormatSettings[3][4] =
       HB_MUX_MP4 | HB_VCODEC_X264   | HB_ACODEC_FAAC,
       0,
       0 },
-    { HB_MUX_AVI | HB_VCODEC_FFMPEG | HB_ACODEC_LAME,
-      HB_MUX_AVI | HB_VCODEC_FFMPEG | HB_ACODEC_AC3,
-      HB_MUX_AVI | HB_VCODEC_X264   | HB_ACODEC_LAME,
-      HB_MUX_AVI | HB_VCODEC_X264   | HB_ACODEC_AC3 },
-    { HB_MUX_OGM | HB_VCODEC_FFMPEG | HB_ACODEC_VORBIS,
-      HB_MUX_OGM | HB_VCODEC_FFMPEG | HB_ACODEC_LAME,
+    { HB_VCODEC_FFMPEG | HB_ACODEC_LAME,
+      HB_VCODEC_FFMPEG | HB_ACODEC_AC3,
+      HB_VCODEC_X264   | HB_ACODEC_LAME,
+      HB_VCODEC_X264   | HB_ACODEC_AC3 },
+    { HB_MUX_MKV | HB_VCODEC_FFMPEG | HB_ACODEC_VORBIS,
+      HB_MUX_MKV | HB_VCODEC_FFMPEG | HB_ACODEC_LAME,
       0,
       0 } };
 
@@ -272,7 +272,10 @@ MainView::MainView( hb_handle_t * handle )
         fAudRatePopUp->AddItem( new BMenuItem( hb_audio_rates[i].string,
             new BMessage ) );
     }
+	#if 0
+	// TODO: hb_audio_rates_default
     fAudRatePopUp->ItemAt( hb_audio_rates_default )->SetMarked( true );
+	#endif
     fAudRateMenu = new BMenuField( r, NULL, "Sample rate (Hz):",
                                    fAudRatePopUp, true );
     box->AddChild( fAudRateMenu );
@@ -283,8 +286,11 @@ MainView::MainView( hb_handle_t * handle )
         fAudBitratePopUp->AddItem( new BMenuItem(
             hb_audio_bitrates[i].string, new BMessage ) );
     }
+    #if 0
+    // TODO: hb_audio_bitrates_default
     fAudBitratePopUp->ItemAt(
         hb_audio_bitrates_default )->SetMarked( true );
+    #endif
     fAudBitrateMenu = new BMenuField( r, NULL, "Bitrate (kbps):",
                                       fAudBitratePopUp, true );
     box->AddChild( fAudBitrateMenu );
@@ -473,7 +479,10 @@ void MainView::Update( hb_state_t * s )
             for( int i = 0; i < hb_list_count( list ); i++ )
             {
                 title = (hb_title_t *) hb_list_item( list, i );
+                #if 0
+                // TODO: dvd missing
                 fSrcDVD2String->SetText( title->dvd );
+                #endif
                 snprintf( string, 1024, "%d - %02dh%02dm%02ds",
                           title->index, title->hours, title->minutes,
                           title->seconds );
@@ -660,9 +669,12 @@ void MainView::TitlePopUpChanged()
     fAudLang2PopUp->AddItem( new BMenuItem( "None", new BMessage() ) );
     for( int i = 0; i < hb_list_count( title->list_audio ); i++ )
     {
+		// TODO: fix
+        #if 0
         audio = (hb_audio_t *) hb_list_item( title->list_audio, i );
         fAudLang1PopUp->AddItem( new BMenuItem( audio->lang, new BMessage() ) );
         fAudLang2PopUp->AddItem( new BMenuItem( audio->lang, new BMessage() ) );
+        #endif
     }
     fAudLang1PopUp->ItemAt( 1 )->SetMarked( true );
     fAudLang2PopUp->ItemAt( 0 )->SetMarked( true );
@@ -858,13 +870,15 @@ void MainView::AddJob()
 
     job->mux    = FormatSettings[format][codecs] & HB_MUX_MASK;
     job->vcodec = FormatSettings[format][codecs] & HB_VCODEC_MASK;
-    job->acodec = FormatSettings[format][codecs] & HB_ACODEC_MASK;
+	// TODO: audio codec?
+    //job->acodec = FormatSettings[format][codecs] & HB_ACODEC_MASK;
 
     if( ( job->vcodec & HB_VCODEC_FFMPEG ) &&
         fVidEncoderPopUp->IndexOf(
             fVidEncoderPopUp->FindMarked() ) > 0 )
     {
-        job->vcodec = HB_VCODEC_XVID;
+        // TODO: No more XVID?
+        //job->vcodec = HB_VCODEC_XVID;
     }
 
     int index;
@@ -881,6 +895,8 @@ void MainView::AddJob()
 
     job->grayscale = fVidGrayCheck->Value();
 
+    #if 0
+    // TODO: Find these missing structs 
     job->subtitle = fSubPopUp->IndexOf(
         fSubPopUp->FindMarked() ) - 1;
 
@@ -894,6 +910,7 @@ void MainView::AddJob()
         fAudRatePopUp->FindMarked() )].rate;
     job->abitrate = hb_audio_bitrates[fAudBitratePopUp->IndexOf(
         fAudBitratePopUp->FindMarked() )].rate;
+    #endif
 
     if( fVidConstantRadio->Value() )
     {
@@ -903,8 +920,11 @@ void MainView::AddJob()
     else if( fVidTargetRadio->Value() )
     {
         job->vquality = -1.0;
+        #if 0
+        // TODO: find hb_calc_bitrate
         job->vbitrate = hb_calc_bitrate( job,
             atoi( fVidTargetControl->Text() ) );
+        #endif
     }
     else
     {
@@ -929,7 +949,7 @@ void MainView::AddJob()
 }
 
 MainWindow::MainWindow( hb_handle_t * handle )
-    : BWindow( BRect( 0,0,10,10 ), "HandBrake " HB_VERSION,
+    : BWindow( BRect( 0,0,10,10 ), "HandBrake",
                B_TITLED_WINDOW, B_NOT_RESIZABLE | B_NOT_ZOOMABLE )
 {
     fHandle = handle;
