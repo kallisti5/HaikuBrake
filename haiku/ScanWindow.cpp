@@ -139,17 +139,14 @@ void ScanView::HandleMessage( BMessage * msg )
         case MSG_OPEN:
             SetEnabled( false );
             fBar->Update( - fBar->CurrentValue(), "Opening..." );
-            #if 0
-            // TODO: fix call to hb_scan
             if( fDetectedRadio->Value() && fPopUp->CountItems() > 0 )
             {
-                hb_scan( fHandle, fPopUp->FindMarked()->Label(), 0 );
+                hb_scan( fHandle, fPopUp->FindMarked()->Label(), 0, 10, 0, 0 );
             }
             else if( fFolderRadio->Value() )
             {
-                hb_scan( fHandle, fControl->Text(), 0 );
+                hb_scan( fHandle, fControl->Text(), 0, 10, 0, 0 );
             }
-            #endif
             break;
     }
 }
