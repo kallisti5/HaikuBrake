@@ -1,9 +1,0 @@
-$(eval $(call import.MODULE.defs,FAAC,faac))
-$(eval $(call import.CONTRIB.defs,FAAC))
-
-FAAC.FETCH.url = http://download.handbrake.fr/handbrake/contrib/faac-1.28.tar.gz
-FAAC.EXTRACT.tarbase = faac-1.28
-
-# If faac not already bootstrapped then add the following
-#FAAC.CONFIGURE.bootstrap = ./bootstrap;
-FAAC.CONFIGURE.extra     = --without-mp4v2

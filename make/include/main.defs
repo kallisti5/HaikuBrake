@@ -38,7 +38,6 @@ ifneq (,$(filter $(BUILD.system),darwin cygwin mingw))
 endif
 
 MODULES += contrib/lame
-MODULES += contrib/faac
 MODULES += contrib/ffmpeg
 MODULES += contrib/libdvdread
 MODULES += contrib/libdvdnav
