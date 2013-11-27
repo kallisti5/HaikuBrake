@@ -1,2 +1,0 @@
-$(eval $(call import.MODULE.rules,LAME))
-$(eval $(call import.CONTRIB.rules,LAME))
