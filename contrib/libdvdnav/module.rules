@@ -1,2 +1,0 @@
-$(eval $(call import.MODULE.rules,LIBDVDNAV))
-$(eval $(call import.CONTRIB.rules,LIBDVDNAV))

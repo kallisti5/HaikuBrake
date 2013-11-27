@@ -37,8 +37,6 @@ ifneq (,$(filter $(BUILD.system),darwin cygwin mingw))
     MODULES += contrib/libsamplerate
 endif
 
-MODULES += contrib/libdvdread
-MODULES += contrib/libdvdnav
 MODULES += contrib/libbluray
 MODULES += contrib/libmkv
 MODULES += contrib/mp4v2
